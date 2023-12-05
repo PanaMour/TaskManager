@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Task Manager</title>
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      margin: 20px;
+      background-color: #f4f4f4;
+    }
+
+    h1 {
+      color: #333;
+    }
+
+    div {
+      margin-bottom: 15px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 5px;
+    }
+
+    input {
+      width: 100%;
+      padding: 8px;
+      margin-bottom: 10px;
+      box-sizing: border-box;
+    }
+
+    button {
+      background-color: #4caf50;
+      color: white;
+      padding: 10px;
+      border: none;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #45a049;
+    }
+
+    #taskList {
+      border-top: 1px solid #ccc;
+      padding-top: 15px;
+    }
+
+    .taskItem {
+      margin-bottom: 10px;
+      padding: 10px;
+      border: 1px solid #ddd;
+      background-color: #fff;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .taskStatus {
+      font-weight: bold;
+      margin-right: 10px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Task Manager</h1>
+  <div>
+    <label for="taskTitle">Task Title:</label>
+    <input type="text" id="taskTitle">
+    <label for="taskDescription">Task Description:</label>
+    <input type="text" id="taskDescription">
+    <button onclick="addTask()">Add Task</button>
+  </div>
+  <div id="taskList">
+    <!-- Task list will be displayed here -->
+  </div>
+
+  <script>
+    // Welcome message function
+    (function showWelcome() {
+      alert("Welcome to the Task Manager!");
+    })();
+
+    // Task constructor function
+    function Task(title, description) {
+      this.title = title;
+      this.description = description;
+      this.status = "incomplete";
+    }
+
+    // Array to store tasks
+    const tasks = [];
+
+    // Function to add a task
+    function addTask() {
+      const titleInput = document.getElementById("taskTitle").value;
+      const descriptionInput = document.getElementById("taskDescription").value;
+
+      // Check if fields are empty
+      if (!titleInput || !descriptionInput) {
+        alert("Please fill in both title and description.");
+        return;
+      }
+
+      // Check if title is unique using the some function
+      if (tasks.some(task => task.title === titleInput)) {
+        alert("Task with the same title already exists. Please use a unique title.");
+        return;
+      }
+
+      // Create a new task and add it to the array
+      const newTask = new Task(titleInput, descriptionInput);
+      tasks.push(newTask);
+
+      // Show all tasks
+      showTasks();
+    }
+
+    // Function to show all tasks
+    function showTasks() {
+      const taskListDiv = document.getElementById("taskList");
+      taskListDiv.innerHTML = "";
+
+      tasks.forEach(task => {
+        const taskItem = document.createElement("div");
+        taskItem.classList.add("taskItem");
+        taskItem.innerHTML = `
+          <div>
+            <strong>${task.title}</strong> - ${task.description}
+            <div class="taskStatus">${task.status}</div>
+            <button onclick="changeTaskStatus('${task.title}')">Change Status</button>
+          </div>`;
+        taskListDiv.appendChild(taskItem);
+      });
+    }
+
+    // Function to change task status
+    function changeTaskStatus(title) {
+      const taskIndex = tasks.findIndex(task => task.title === title);
+
+      if (taskIndex !== -1) {
+        tasks[taskIndex].status = tasks[taskIndex].status === "Incomplete" ? "Complete" : "Incomplete";
+        showTasks();
+      }
+    }
+  </script>
+</body>
+</html>
